@@ -2,15 +2,15 @@
 #include <algorithm>
 #include <vector>
 #include <queue>
-#include <string>
+// 24.11.10 -- 복습
 using namespace std;
 
-char wall[1001][1001];
-int visit[1001][1001];
-int fire_time[1001][1001];
-
-int dx[4] = {0,1,0,-1};
+int dx[4]= {0,1,0,-1};
 int dy[4] = {1,0,-1,0};
+
+char board[1001][1001];
+int visit[1001][1001];
+int fire[1001][1001];
 
 int main(void) {
     ios::sync_with_stdio(false);
@@ -18,71 +18,63 @@ int main(void) {
 
     int R,C;
     cin >> R >> C;
-    queue<pair<int,int>> que;
-    queue<pair<int,int>> fire;
 
+    queue<pair<int,int>> q;
+    queue<pair<int,int>> f;
     for(int i=0; i<R; i++) {
         for(int j=0; j<C; j++) {
-            cin >> wall[i][j];
+            cin >> board[i][j];
 
-            if(wall[i][j] == 'F') { // 불이 났으면
-                fire_time[i][j] = 1; // 불이 난 위치 표시
-                fire.push({i,j});
+            if(board[i][j] == 'J') { // 초기위치 방문
+                q.push({i,j});
+                visit[i][j] = 1; // 방문표시
             }
-            else if(wall[i][j] == 'J') { // 시작 위치를 찾으면
-                visit[i][j] = 1; // 시작위치 표시
-                que.push({i,j});
+            else if(board[i][j] == 'F') { // 불난 위치 
+                f.push({i,j});
+                fire[i][j] = 1; // 불난 표시
             }
-            else { // 이외의 경우는 해당 없음
-                visit[i][j]= 0;
-                fire_time[i][j] = 0;
+            else {
+                visit[i][j] = 0;
+                fire[i][j] = 0;
             }
         }
     }
 
-    // 불 먼저
-    while(!fire.empty()) {
-        auto cur = fire.front();
-        fire.pop();
-
+    while(!f.empty()) {
+        auto cur = f.front();
+        f.pop();
         for(int i=0; i<4; i++) {
             int nx = cur.first + dx[i];
             int ny = cur.second + dy[i];
 
-            if(nx<0 || nx >=R || ny <0 || ny>=C) // 불이 범위를 넘어갔으면 무시
-                continue;
-            if(wall[nx][ny] == '#' || fire_time[nx][ny] != 0) // 벽이거나 이미 불이 났으면 무시
-                continue;
-            fire_time[nx][ny] = fire_time[cur.first][cur.second] +1;
-            fire.push({nx,ny});
+            if(nx<0 || nx>=R || ny<0 || ny >= C) continue;
+            if(board[nx][ny] == '#' || fire[nx][ny] != 0) continue; // 불의 위치가 벽이거나 이미 이미 방문한 것은 무시한다.
+
+            fire[nx][ny] = fire[cur.first][cur.second] +1;
+            f.push({nx,ny});
         }
     }
 
-    // 탈출
-    while(!que.empty()) {
-        auto cur = que.front();
-        que.pop();
-
+    while(!q.empty()) {
+        auto cur = q.front();
+        q.pop();
         for(int i=0; i<4; i++) {
             int nx = cur.first + dx[i];
             int ny = cur.second + dy[i];
 
-            if(nx<0 || nx >=R || ny <0 || ny>=C) { // 탈출에 성공했다면
-                cout << visit[cur.first][cur.second]; // 출력
+            if(nx<0 || nx>=R || ny<0 || ny >= C) { // 범위를 지나간 것은 통과에 성공한 것이다.
+                cout << visit[cur.first][cur.second];
                 return 0;
             }
-
-            if(wall[nx][ny] == '#' || visit[nx][ny] != 0) // 벽이거나 이미 방문 했으면 무시
-                continue;
-            if(fire_time[nx][ny] != 0 && fire_time[nx][ny] <= visit[cur.first][cur.second] +1)
-                continue;
-
+            if(board[nx][ny] == '#' || visit[nx][ny] != 0) continue; // 방문 위치가 벽이거나 이미 방문한 것은 무시한다.
+            if(fire[nx][ny] != 0 && fire[nx][ny] <= visit[cur.first][cur.second] +1) continue; 
+            // 이미 불이 번졌거나 도착 시점과 불의 위치 전파 위치가 같은 경우는 무시한다.
+            
             visit[nx][ny] = visit[cur.first][cur.second] +1;
-            que.push({nx,ny});
+            q.push({nx,ny});
         }
     }
-    // 탈출 못했을 경우
-    cout << "IMPOSSIBLE";
 
+    cout << "IMPOSSIBLE";
     return 0;
 }
