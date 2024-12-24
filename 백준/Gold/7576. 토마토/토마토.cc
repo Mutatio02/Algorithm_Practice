@@ -1,32 +1,32 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <queue>
+#include <bits/stdc++.h>
 using namespace std;
+// 24.12.24 복습 -- 토마토
+int N,M;
 
-int dx[4] = {0,1,-1,0};
-int dy[4] = {1,0,0,-1};
+int dx[4] ={0,1,0,-1};
+int dy[4] ={1,0,-1,0};
 
-int box[1001][1001]; // 상자
-int visit[1001][1001]; // 방문 표시
-int main(void) {
+int box[1001][1001];
+int vis[1001][1001];
+
+int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    int M,N;
-    cin >> M >> N; // 가로 세로
+    cin >> M >> N;
     queue<pair<int,int>> que;
 
     for(int i=0; i<N; i++) {
         for(int j=0; j<M; j++) {
             cin >> box[i][j];
-            if(box[i][j] == 1) { // 토마토가 익은부분부터 시작
+
+            if(box[i][j] == 1) { // 익은 토마토 부터 시작
                 que.push({i,j});
-                visit[i][j] = 0; 
+                vis[i][j] = 0; // 시작!
             }
 
-            if(box[i][j] == 0) { // 익지 않은 토마토는 -1로 초기화
-                visit[i][j] = -1; // -1로 초기화 --> 후에 방문 해야됨
+            if(box[i][j] == 0) {
+                vis[i][j] = -1; // -1로 초기화 뒤 방문 예정
             }
         }
     }
@@ -34,28 +34,31 @@ int main(void) {
     while(!que.empty()) {
         auto cur = que.front();
         que.pop();
+
         for(int i=0; i<4; i++) {
-            int nx = cur.first+dx[i];
-            int ny = cur.second+dy[i];
-            if(nx<0 || nx >= N || ny<0 || ny>=M)    continue; // 범위를 지나가면 무시
-            if(visit[nx][ny]!=-1)   continue; // 익지 않은 토마토 이외의 나머지는 무시
-            visit[nx][ny] = visit[cur.first][cur.second]+1;
+            int nx = dx[i] + cur.first;
+            int ny = dy[i] + cur.second;
+
+            if(nx<0 || nx>= N || ny<0 || ny>=M) continue;
+            if(vis[nx][ny] != -1) continue; // -1로 초기화 된 것이 아니라면 무시
+
             que.push({nx,ny});
-        }
-    }
-    
-    int ans = 0;
-    for(int i=0; i<N; i++) {
-        for(int j=0; j<M; j++) {
-            if(visit[i][j] == -1) { // 아직까기 익지않은 토마토가 있으면
-                cout << -1;
-                return 0;
-            }
-            ans = max(ans,visit[i][j]);
+            vis[nx][ny] = vis[cur.first][cur.second] +1;
         }
     }
 
+    int ans = 0;
+
+    for(int i=0; i<N; i++) {
+        for(int j=0; j<M; j++) {
+            if(vis[i][j] == -1) {
+                cout << -1;
+                return 0;
+            }
+            ans = max(ans,vis[i][j]);
+        }
+    }
     cout << ans;
-    
+
     return 0;
 }
