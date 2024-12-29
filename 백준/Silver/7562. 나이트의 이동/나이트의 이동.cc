@@ -1,59 +1,57 @@
-#include <iostream>
-#include <queue>
-#include <string>
+#include <bits/stdc++.h>
 using namespace std;
-// 24.11.19 -- 나이트 이동 복습
+// 24.12.29 --나이트 이동 복습
+int T,I;
 int board[301][301];
-int dx[8] = {1 , 2, -1, -2, -1, -2, 1, 2};
-int dy[8] = {2 , 1, -2, -1, 2, 1, -2,-1};
 
+int dx[8] = {1,2,1,2,-1,-2,-1,-2};
+int dy[8] = {2,1,-2,-1,2,1,-2,-1};
 
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    int T;
     cin >> T;
-
     while(T--) {
-        int l;
-        cin >> l;
-        queue<pair<int,int>> q;
-        for(int i=0; i<l; i++) {
-            for(int j=0; j<l; j++) {
-                board[i][j] = -1;
-            }
-        }
-        
+        cin >> I;
         pair<int,int> loc;
         pair<int,int> mov;
+        queue<pair<int,int>> que;
+
         cin >> loc.first >> loc.second;
         cin >> mov.first >> mov.second;
 
-        if(loc == mov) {
-            cout << 0 << '\n';
-            continue;
-        }
-
-        q.push({loc.first,loc.second});
-        board[loc.first][loc.second] = 0;
-
-        while(!q.empty()) {
-            auto cur = q.front();
-            q.pop();
-
-            for(int dir = 0; dir<8; dir++) {
-                int nx = cur.first + dx[dir];
-                int ny = cur.second + dy[dir];
-
-                if(nx<0 || nx >= l || ny<0 || ny >= l) continue;
-                if(board[nx][ny] >= 0) continue;
-                board[nx][ny] = board[cur.first][cur.second] +1;
-                q.push({nx,ny});
+        for(int i=0; i<I; i++) {
+            for(int j=0; j<I; j++) {
+                board[i][j] = -1; // -1로 초기화
             }
         }
-        cout << board[mov.first][mov.second] << '\n';
 
+        if(loc == mov) {
+            cout << 0 << "\n";
+            continue;
+        }
+        
+        que.push({loc.first,loc.second});
+        board[loc.first][loc.second] = 0; // 0으로 시작
+
+        while(!que.empty()) {
+            auto cur = que.front();
+            que.pop();
+
+            for(int i=0; i<8; i++) {
+                int nx = dx[i] + cur.first;
+                int ny = dy[i] + cur.second;
+
+                if(nx<0 ||nx>= I || ny<0 || ny >= I) continue;
+                if(board[nx][ny]>=0) continue;
+                board[nx][ny] = board[cur.first][cur.second]+1;
+                que.push({nx,ny});
+            }
+        }
+        cout << board[mov.first][mov.second] << "\n";
     }
+    
+
     return 0;
 }
