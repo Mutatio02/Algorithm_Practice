@@ -1,42 +1,44 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <queue>
-
+#include <bits/stdc++.h>
 using namespace std;
-int visit[1000001];
+// 24.12.30 --스타트 링크 복습
 
-int main(void) {
+int board[1000001];
+
+int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
     int F,S,G,U,D;
-    cin >> F >> S >> G >> U >> D; // 건물, 현재위치, 이동층, 위로이동, 아래이동
-    queue<int> q;
-    
-    for(int i=1; i<=F; i++) {
-        visit[i] = -1;
-    }
-    q.push(S);
-    visit[S] = 0;
+    cin >> F >> S >> G >> U >> D;
 
-    while(!q.empty()) {
-        int cur = q.front(); // 현재 위치
-        q.pop();
-        
-        for(auto dir : {cur+U,cur-D}) { // 현재로 부터 위, 아래
-            if(dir<=0 || dir > F) continue;
-            if(visit[dir] != -1) continue; 
-            visit[dir] = visit[cur] +1;
-            q.push(dir);
+
+    for(int i=1; i<=F; i++) { // 1층부터 F층까지 초기화
+        board[i] = -1; 
+    }
+
+    queue<int> que;
+    que.push(S); // S층은 현재 위치
+    board[S] = 0; // 현재 위치는 0
+
+    while(!que.empty()) {
+        int cur = que.front();
+        que.pop();
+
+        for(auto dir: {cur+U,cur-D}) {
+            if(dir<=0|| dir>F) continue;
+            if(board[dir] !=-1) continue;
+            board[dir] = board[cur]+1;
+            que.push(dir);
         }
     }
-    if(visit[G] == -1) {
+
+    if(board[G] == -1) {
         cout << "use the stairs";
     }
     else {
-        cout << visit[G];
+        cout << board[G];
     }
     
+
     return 0;
 }
