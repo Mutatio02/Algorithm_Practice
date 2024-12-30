@@ -1,69 +1,72 @@
-#include <iostream>
-#include <queue>
-#include <string>
-#include <algorithm>
+#include <bits/stdc++.h>
 using namespace std;
-// 24.11.20--영역 구하기 복습
+// 24.12.230 --영역 구하기 복습
 
+int N,M,k;
 int dx[4] = {0,1,0,-1};
 int dy[4] = {1,0,-1,0};
-int visit[101][101];
-int board[101][101];
 
+int board[101][101];
+bool vis[101][101];
+vector<int> v;
+void bfs(int x,int y) {
+    int area = 0;
+    queue<pair<int,int>> que;
+    que.push({x,y});
+    vis[x][y] = true;
+
+    while (!que.empty()) {
+        auto cur = que.front();
+        que.pop();
+        area++;
+
+        for(int i=0; i<4; i++) {
+            int nx = dx[i] + cur.first;
+            int ny = dy[i] + cur.second;
+
+            if(nx<0 || nx >= M || ny < 0 || ny>=N) continue;
+            if(board[nx][ny] != 0 || vis[nx][ny]) continue;
+            que.push({nx,ny});
+            vis[nx][ny] = true;
+        }
+        
+    }
+    v.push_back(area);
+    
+}
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    int M,N,K;
-    cin >> M >> N >> K;
-    vector<int> v;
+    cin >> M >> N >> k;
     int cnt = 0;
-    for(int i=0; i<K; i++) {
-        pair<int,int> left;
-        pair<int,int> right;
-        cin >> left.first >> left.second >> right.first >> right.second;
+    
+    while(k--) {
+        pair<int,int> d1,d2;
+        cin >> d1.first >> d1.second >> d2.first >> d2.second;
 
-        for(int p = left.second; p<right.second; p++) {
-            for(int q = left.first; q<right.first; q++) {
-                board[p][q] = -1;
+        for(int i=d1.second; i<d2.second; i++) {
+            for(int j=d1.first; j<d2.first; j++) {
+                board[i][j] = 1; // 1로 표시
             }
         }
     }
-    queue<pair<int,int>> q;
-
+        
+    
     for(int i=0; i<M; i++) {
         for(int j=0; j<N; j++) {
-            if(board[i][j] == -1 || visit[i][j] == 1) continue;
-            q.push({i,j});
-            visit[i][j] = 1;
-            cnt++;
-            int area = 1; // 영역 넓이
-
-            while(!q.empty()) {
-                auto cur = q.front();
-                q.pop();
-
-                for(int dir =0; dir<4; dir++) {
-                    int nx = dx[dir]+cur.first;
-                    int ny = dy[dir]+cur.second;
-
-                    if(nx<0 || nx>= M || ny<0 || ny>= N) continue;
-                    if(board[nx][ny] == -1|| visit[nx][ny] == 1) continue;
-                    visit[nx][ny] = 1;
-                    q.push({nx,ny});
-                    area++;
-                }
+            if(board[i][j] == 0 && !vis[i][j]) {
+                bfs(i,j);
+                cnt++;
             }
-            v.push_back(area);
         }
     }
-
-    sort(v.begin(),v.end());
     
+    sort(v.begin(),v.end());
+
     cout << cnt << "\n";
-    for(int r : v) {
-        cout << r << ' ';
+    for(auto a : v) {
+        cout << a << " ";
     }
 
-    return 0;
 }
