@@ -1,33 +1,30 @@
-#include <iostream>
-#include <queue>
-#include <tuple>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-char board[31][31][31];
-int visit[31][31][31];
-
+int L, R, C; // 빌딩의 층수, 행과 열
 int dx[6] = {0, 1, 0, -1, 0, 0};
 int dy[6] = {1, 0, -1, 0, 0, 0};
 int dz[6] = {0, 0, 0, 0, 1, -1};
+
+char board[31][31][31];
+int vis[31][31][31];
 
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    while (true) {
-        int L, R, C;
+    while (1) {
         cin >> L >> R >> C;
-
         if (L == 0 && R == 0 && C == 0) break;
 
-        queue<tuple<int, int, int>> q;
+        queue<tuple<int, int, int>> que;
+        bool escaped = false;
 
         // 초기화
         for (int i = 0; i < L; i++) {
             for (int j = 0; j < R; j++) {
                 for (int k = 0; k < C; k++) {
-                    visit[i][j][k] = -1;
+                    vis[i][j][k] = -1;
                 }
             }
         }
@@ -37,36 +34,34 @@ int main() {
                 for (int k = 0; k < C; k++) {
                     cin >> board[i][j][k];
                     if (board[i][j][k] == 'S') {
-                        q.push({i, j, k});
-                        visit[i][j][k] = 0; // 시작 위치의 방문 시간은 0
+                        que.push({i, j, k});
+                        vis[i][j][k] = 0;
                     }
                 }
             }
         }
 
-        bool escaped = false;
+        while (!que.empty() && !escaped) {
+            int z, x, y;
+            tie(z, x, y) = que.front();
+            que.pop();
 
-        while (!q.empty() && !escaped) {
-            auto cur = q.front();
-            q.pop();
+            for (int i = 0; i < 6; i++) {
+                int nz = z + dz[i];
+                int nx = x + dx[i];
+                int ny = y + dy[i];
 
-            for (int dir = 0; dir < 6; dir++) {
-                int nz = get<0>(cur) + dz[dir];
-                int nx = get<1>(cur) + dx[dir];
-                int ny = get<2>(cur) + dy[dir];
-
-                // 범위 체크 및 방문 여부 확인
                 if (nz < 0 || nz >= L || nx < 0 || nx >= R || ny < 0 || ny >= C) continue;
-                if (board[nz][nx][ny] == '#' || visit[nz][nx][ny] >= 0) continue;
+                if (board[nz][nx][ny] == '#' || vis[nz][nx][ny] >= 0) continue;
 
                 if (board[nz][nx][ny] == 'E') {
-                    cout << "Escaped in " << visit[get<0>(cur)][get<1>(cur)][get<2>(cur)] + 1 << " minute(s).\n";
+                    cout << "Escaped in " << vis[z][x][y] + 1 << " minute(s).\n";
                     escaped = true;
                     break;
                 }
 
-                visit[nz][nx][ny] = visit[get<0>(cur)][get<1>(cur)][get<2>(cur)] + 1;
-                q.push({nz, nx, ny});
+                vis[nz][nx][ny] = vis[z][x][y] + 1;
+                que.push({nz, nx, ny});
             }
         }
 
