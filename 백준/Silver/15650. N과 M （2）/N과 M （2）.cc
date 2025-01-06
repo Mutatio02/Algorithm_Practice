@@ -1,25 +1,25 @@
 #include <bits/stdc++.h>
 using namespace std;
-
+// 25.01.06 백트레킹 복습 (N과M 2)
 int N,M;
 int board[10];
 
-void solve(int k) {
-    if(k == M) {
+void back_track(int k) {
+    if(k==M) {
         for(int i=0; i<M; i++) {
             cout << board[i] << ' ';
         }
         cout << "\n";
-        return;
     }
 
     int start = 1;
     if(k!=0) {
-        start = board[k-1] + 1; // k인 경우 K+1 부터 해당하는 수를 넣는다
+        start = board[k-1] + 1;
     }
+
     for(int i=start; i<=N; i++) {
         board[k] = i;
-        solve(k+1);
+        back_track(k+1);
     }
 }
 int main() {
@@ -27,8 +27,9 @@ int main() {
     cin.tie(nullptr);
 
     cin >> N >> M;
-    
-    solve(0);
 
+    back_track(0);
+
+    
     return 0;
 }
