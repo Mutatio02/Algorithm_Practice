@@ -1,29 +1,31 @@
 #include <bits/stdc++.h>
 using namespace std;
-
+// 25.01.07 백트레킹 복습 (N과M 9)
 int N,M;
 int board[10];
 int output[10];
 bool used[10];
-void solve(int k) {
-    if(k == M) {
+
+void back_track(int k) {
+     if(k==M) {
         for(int i=0; i<M; i++) {
             cout << output[i] << ' ';
         }
         cout << "\n";
         return;
     }
-    int tmp = 0; // 이전과 같은 값이 아니여야 된다
 
+    int compare = 0;
     for(int i=0; i<N; i++) {
-        if(!used[i] && tmp!= board[i]) {
+        if(!used[i] && compare != board[i]) { // 중복 방지
+            output[k] =  board[i];
+            compare = board[i];
             used[i] = true;
-            output[k] = board[i];
-            tmp = output[k];
-            solve(k+1);
-            used[i] = false;
-        }    
+            back_track(k+1);
+            used[i] = false;  // 백트래킹 복귀
+        }
     }
+    
 }
 
 int main() {
@@ -31,13 +33,14 @@ int main() {
     cin.tie(nullptr);
 
     cin >> N >> M;
-    
+
     for(int i=0; i<N; i++) {
         cin >> board[i];
     }
-    sort(board,board+N);
 
-    solve(0);
+    sort(board,board+N);
+    
+    back_track(0);
 
     return 0;
 }
