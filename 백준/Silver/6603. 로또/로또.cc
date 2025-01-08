@@ -1,26 +1,22 @@
 #include <bits/stdc++.h>
 using namespace std;
+// 25.01.08 백트레킹 복습 (로또)
 
-int board[15]; // 입력
-int S[15]; // 집합
 int k;
-
-void solve(int idx,int start) {
-    if(idx == 6) { // 로또 번호는 6개
+int board[50];
+int output[6];
+void back_track(int idx,int start) {
+    if(idx==6) {
         for(int i=0; i<6; i++) {
-            cout << S[i] << ' ';
+            cout << output[i] << ' ';
         }
         cout << "\n";
         return;
     }
-
-    int tmp = 0;
+    
     for(int i=start; i<k; i++) {
-        if(board[i]!=tmp) {
-            S[idx] = board[i];
-            tmp = board[i];
-            solve(idx+1,i+1);
-        }
+        output[idx] = board[i];
+        back_track(idx+1,i+1);
     }
 }
 int main() {
@@ -30,12 +26,17 @@ int main() {
     while(1) {
         cin >> k;
         if(k==0) break;
+
+        fill(board,board+k,0);
+         
         for(int i=0; i<k; i++) {
             cin >> board[i];
         }
+
+        back_track(0,0);
         
-        solve(0,0);
-        cout << "\n";        
+        cout << "\n";
     }
+    
     return 0;
 }
