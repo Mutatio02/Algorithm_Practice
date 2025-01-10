@@ -1,76 +1,84 @@
 #include <bits/stdc++.h>
 using namespace std;
-// 2048(easy) --> 다시 풀기 24.12.18
+// 25.01.09 시뮬레이션(2048 easy 복습)
 int N;
-int board[21][21]; // 2048판
-int board2[21][21]; // 판의 복사본
-
+int board[21][21];
+int board2[21][21];
+int ans = 0;
 void rotate() {
-    int tmp[21][21]; // 판의 회전을 위한 복사본
+    int copy[21][21];
+
     for(int i=0; i<N; i++) {
         for(int j=0; j<N; j++) {
-            tmp[i][j]= board2[i][j];
+            copy[i][j] = board2[i][j];
         }
     }
-    
+
     for(int i=0; i<N; i++) {
         for(int j=0; j<N; j++) {
-            board2[i][j] = tmp[N-1-j][i];
+            board2[i][j] = copy[N-1-j][i];
         }
     }
 }
-void tilt(int dir) {
-    while(dir--) rotate(); // 0, 90, 180, 270 회전 
-    for(int i=0; i<N; i++) { // 회전한 결과를 더하기
-        int tilted[21] = {};
-        int idx = 0;
-        for(int j=0; j<N; j++) {
-            if(board2[i][j] == 0) continue;
-            if(tilted[idx] == 0) {
-                tilted[idx] = board2[i][j];
+
+void move(int dir) {
+    dir%=4;
+    while(dir--) rotate(); // 0도 90도 180도 270도에 맞춰서 회전
+    for(int i =0; i<N; i++) {
+        int res[21] = {};
+        int idx= 0;
+        for(int j=0; j<N; j++) { // 기울였을 때 계산
+            if(board2[i][j] == 0 ) continue;
+            if(res[idx]==0)  {
+                res[idx] = board2[i][j];
             }
-            else if(tilted[idx] == board2[i][j]) {
-                tilted[idx++] *=2;
+            else if(res[idx] == board2[i][j]) {
+                res[idx++] *=2;
             }
             else {
-                tilted[++idx] = board2[i][j];
+                res[++idx] = board2[i][j];
             }
         }
-        for(int j=0; j<N; j++) { // 더한 결과를 다시 담기
-            board2[i][j] = tilted[j];
+        for(int j=0; j<N; j++) { // 기울인 행 계산 결과를 다시 담기
+            board2[i][j] = res[j];
         }
     }
 }
-
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    int big = 0;
+
     cin >> N;
+
     for(int i=0; i<N; i++) {
         for(int j=0; j<N; j++) {
             cin >> board[i][j];
         }
     }
 
-    for(int tmp=0; tmp<1024; tmp++) {
+    for(int tmp =0; tmp<1024; tmp++) { // 경우의 수는 총 4의 5승
         for(int i=0; i<N; i++) {
             for(int j=0; j<N; j++) {
                 board2[i][j] = board[i][j];
             }
         }
+
         int search = tmp;
-        for(int i =0; i<5; i++) { // 최대 5회
+        for(int i=0; i<5; i++) { // 최대 5번
             int dir = search%4;
             search/=4;
-            tilt(dir);
+            move(dir);
         }
-        for(int i=0; i<N; i++) { // board2에서 가장 큰 값을 찾기
+
+        for(int i=0; i<N; i++) {
             for(int j=0; j<N; j++) {
-                big = max(big,board2[i][j]); 
+                ans = max(ans,board2[i][j]);
             }
-        }       
+        }
     }
-    cout << big;
+
+    cout << ans;
+    
+    
     return 0;
 }
