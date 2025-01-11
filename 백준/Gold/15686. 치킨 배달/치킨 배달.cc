@@ -1,46 +1,68 @@
 #include <bits/stdc++.h>
 using namespace std;
+// 25.01.11 시뮬레이션(치킨배달 복습)
 int N,M;
-int city[51][51];
-vector<pair<int,int>> home; // 집의 좌표
-vector<pair<int,int>> chick; // 치킨집의 좌표
+int board[51][51];
+int dist = 0;
+vector<pair<int,int>> chick;
+vector<pair<int,int>> home;
+int ans = INT_MAX;
+
+int calcul(const vector<int>& select) {
+    int total_dist = 0;
+    for(auto h: home) {
+        int hx = h.first;
+        int hy = h.second;
+        int dist = INT_MAX;
+
+        for(int idx : select ) {
+            int cx = chick[idx].first;
+            int cy = chick[idx].second;
+
+            dist = min(dist,abs(cx-hx) + abs(cy-hy));
+        }
+        total_dist += dist;
+    }
+    return total_dist;
+}
+
+void back_track(int k,vector<int>& select) {
+    if(select.size() == M) {
+        ans = min(ans,calcul(select));
+        return;
+    }
+    
+    for(int i=k; i<chick.size(); i++) {
+        select.push_back(i);
+        back_track(i+1,select);
+        select.pop_back();
+    }
+
+}
 
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
     cin >> N >> M;
+
     for(int i=0; i<N; i++) {
         for(int j=0; j<N; j++) {
-            cin >> city[i][j];
-            if(city[i][j] == 1) {
-                home.push_back({i,j});
-            }            
-            if(city[i][j] == 2) {
-                chick.push_back({i,j});
+            cin >> board[i][j];
+
+            if(board[i][j] == 1) {
+                home.push_back({i,j}); // 집 좌표
+            }
+            else if(board[i][j] == 2) {
+                chick.push_back({i,j}); // 치킨집 좌표
             }
         }
     }
+    vector<int> select; // 선택할 치킨집
 
-    vector<int> select (chick.size(),1); // 치킨집중 M개를 선택할 조합배열
-    fill(select.begin(),select.begin() + chick.size() - M, 0);
+    back_track(0,select);
 
-    int result = INT_MAX;
-    do{
-        int chick_dist = 0;
-        for(auto h: home) {
-            int dist = INT_MAX;
-            for(int i=0; i<chick.size(); i++) {
-                if(select[i] ==0) continue; // 선택되지 않는 경우는 무시
-                dist = min(dist, abs(chick[i].first - h.first) + 
-                    abs(chick[i].second - h.second));
-            }
-            chick_dist += dist;
-        }
-        result = min(result,chick_dist);
-    }while(next_permutation(select.begin(),select.end()));
+    cout << ans;
 
-    cout << result;
-    
     return 0;
 }
