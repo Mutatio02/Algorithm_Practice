@@ -1,26 +1,24 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
-
+#include <bits/stdc++.h>
 using namespace std;
-int arr[100001]; // 입력
-int sum[100001]; // 누적합 저장 배열
-int main(void) {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    
-    int N, M;
+// 25.2.5 구간 합 구하기 4 (DP 복습) 
+int N,M;
+int dp[100001]; // 합 저장해 두기
+int arr[100001];
+
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
     cin >> N >> M;
-    for(int i=1; i<=N; i++) {
-        cin >> arr[i];
-        sum[i] = sum[i-1] + arr[i]; // 누적합 = 누적합 이전 + 입력값
-    }
-    while(M--) {
-        int start,end;
-        cin >> start >> end;
-        
-        cout << sum[end] - sum[start-1] << '\n'; // 끝 위치의 누적합 - 시작 위치 전의 누적합
+    for(int i=1; i<=N; i++) { // 1 based
+        cin >> arr[i]; 
+        dp[i] = dp[i-1] + arr[i]; // 누적 = 누적이전까지의 합 + 입력값
     }
 
+    while(M--) {
+        int x,y;
+        cin >> x >> y;
+        cout << dp[y] - dp[x-1] << "\n";
+    }
     return 0;
 }
