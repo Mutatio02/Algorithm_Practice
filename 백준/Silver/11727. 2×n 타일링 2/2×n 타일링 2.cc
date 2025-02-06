@@ -1,24 +1,22 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
-
+#include <bits/stdc++.h>
 using namespace std;
-int arr[1001];
+// 25.02.06 정수 삼각형(dp복습)
+int n;
+int dp[1010];
 
-int main(void) {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+    cin >> n;
+    dp[0] = 0;
+    dp[1] = 1;
+    dp[2] = 3;
     
-    int N;
-    cin >> N;
-    arr[1] = 1;
-    arr[1] = 1;
-    arr[2] = 3;
-    for(int i=3; i<=N; i++) {
-        arr[i] = arr[i-1] + 2*(arr[i-2]);
-        arr[i] %= 10007;
+    for(int i=3; i<=n; i++) {
+        dp[i] = dp[i-1] + 2*(dp[i-2]);
+        dp[i]%=10007;
     }
-    cout << arr[N];
     
-    return 0;
+    cout << dp[n];
 }
