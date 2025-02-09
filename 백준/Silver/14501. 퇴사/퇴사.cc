@@ -1,31 +1,35 @@
-#include <iostream>
-#include <algorithm>
+#include <bits/stdc++.h>
 using namespace std;
+// 25.02.09 퇴사(dp복습)
 
-int dp[16][2]; // 상담 기간과 소득을 저장할 배열
-int arr[16];   // 각 날짜별 최대 소득을 저장할 배열
+int N;
+int day[20]; // 상담 소요 기간
+int money[20]; // 금액
+int dp[20]; // 최대 이익 계산
 
-int main(void) {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-    int N;
     cin >> N;
 
-    for (int i = 1; i <= N; i++) {
-        cin >> dp[i][0] >> dp[i][1]; // 상담 소요 기간과 수익 
+    for(int i=1; i<=N; i++) {
+        cin >> day[i] >> money[i];
     }
+    
+    for(int i=1; i<=N; i++) {
+        dp[i] = max(dp[i],dp[i-1]); // 현재 저장된 건과 이전값 비교
+        
+        int next = i + day[i]; // 다음날
 
-    for (int i = 1; i <= N; i++) {
-        arr[i] = max(arr[i], arr[i - 1]);
-
-        int day = i + dp[i][0]; // 상담 종료 날짜 계산
-        if (day <= N + 1) {
-            arr[day] = max(arr[day], arr[i] + dp[i][1]);
+        if(next<=N+1) { // 퇴사 전까지
+            dp[next]= max(dp[next], dp[i] + money[i]);
         }
+
     }
 
-    int result = max(arr[N], arr[N + 1]);
-    cout << result;
+    int ans = max(dp[N],dp[N+1]);
+    cout << ans;
+    
     return 0;
 }
