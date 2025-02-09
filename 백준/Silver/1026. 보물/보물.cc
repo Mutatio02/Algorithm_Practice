@@ -1,31 +1,32 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
-
+#include <bits/stdc++.h>
 using namespace std;
+// 25.02.10 보물(그리디)
+int N;
+int A[101];
+int B[101];
+int ans= 0;
 
-int main(void) {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    
-    int N;
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
     cin >> N;
-    vector<int> A(N);
-    vector<int> B(N);
-    int S = 0;
+
     for(int i=0; i<N; i++) {
         cin >> A[i];
     }
+
     for(int i=0; i<N; i++) {
         cin >> B[i];
     }
-    sort(A.begin(),A.end()); // A는 오름차순 
-    sort(B.rbegin(),B.rend()); // B는 내림차순
-    for(int i=0; i<N; i++) {
-        S += A[i] * B[i]; 
-    }
+    
+    sort(A,A+N); // 오름차순
+    sort(B,B+N,greater<int>()); // 내림차순
 
-    cout << S;
+    for(int i=0; i<N; i++) {
+        ans+= A[i] * B[i];
+    }
+    cout << ans;
 
     return 0;
 }
