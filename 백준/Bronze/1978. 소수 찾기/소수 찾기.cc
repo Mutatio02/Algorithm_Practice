@@ -1,38 +1,34 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-int main(void) {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
+// 25.02.13 소수 찾기 복습 (수학) 
+int N;
+int arr[105];
+int cnt = 0;
 
-    int N;
+bool isprime(int x) {
+    if(x<2) return false;
+    for(int i=2; i*i <=x; i++) {
+        if(x%i ==0) return false;
+    }
+    return true;
+}
+
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
     cin >> N;
 
-    int number;
-    int answer = 0; // 최종 답
-    int count = 0; // 약수의 개수 -->2가 되면 answer를 증가
-
-    while(N--) {
-        cin >> number;
-
-        for(int i = 1; i<=number; i++) {
-            if(number%i == 0) {
-                count++;
-            }
-        }
-
-        if(count == 2) {
-            answer++;
-        }
-
-        count = 0;
-
+    for(int i=0; i<N; i++) {
+        cin >> arr[i];
     }
 
-    cout << answer;
+    for(int i=0; i<N; i++) {
+        if(isprime(arr[i])) cnt++;
+    }
+
+    cout << cnt;
 
     return 0;
 }
