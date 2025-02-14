@@ -1,38 +1,32 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
 
-bool isPrime(long long num) {
-    if (num <= 1) return false;
-    if (num <= 3) return true;
-    if (num % 2 == 0 || num % 3 == 0) return false;
+// 25.02.13 소수 구하기 (수학) 
+long long N,M;
 
-    for (long long i = 5; i * i <= num; i += 6) {
-        if (num % i == 0 || num % (i + 2) == 0) return false;
+
+bool isPrime(int x) {
+    if(x<2) return false;
+    for(int i=2; i*i <=x; i++) {
+        if(x%i ==0) return false;
     }
-
     return true;
 }
 
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-    long long M,N;
     cin >> M >> N;
-    vector<long long> v;
 
-    for(long long i = M; i<=N; i++) {
+    for(int i=M; i<=N; i++) {
         if(isPrime(i)) {
-            v.push_back(i);
+            cout << i << "\n";
         }
     }
-    sort(v.begin(),v.end());
 
-    for(auto num : v) {
-        cout << num << '\n';
-    }
+
+    
 
     return 0;
 }
