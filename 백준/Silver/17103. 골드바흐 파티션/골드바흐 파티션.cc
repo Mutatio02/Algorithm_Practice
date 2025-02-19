@@ -1,43 +1,44 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <cmath>
+#include <bits/stdc++.h>
 using namespace std;
 
-
-int main(void) {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    bool prime[1000001];
-    for(int i=0; i<1000001; i++) {
-        prime[i] = true;
-    }
-    prime[1] = false;
-    for(int i=2; i<1000001; i++) {
-        for(int j=2*i; j<1000001; j+=i) {
-            prime[j] = false;
+// 25.02.19 골드바흐 파티션 복습 (수학) 
+int T;
+const int MX =  1000000;
+vector<bool> prime(MX + 1, true);
+void base() {
+    prime[0]=prime[1] = false;
+    for(int i=2; i*i<=MX; i++) {
+        if(prime[i]) {
+            for(int j=i*i; j<=MX; j+=i) {
+                prime[j] = false;
+            }   
         }
     }
+}
+void partition(int n) {
+    int cnt = 0;
+    for(int i=2; i<=n/2; i++) {
+        int tmp = n-i;
+        if(prime[i]&&prime[tmp]) {
+            cnt++;
+        }
+    }
+    cout << cnt << "\n";
+    return;
+}
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-    int T;
     cin >> T;
-    vector<int> ans;
+    
+    base();
 
     while(T--) {
         int N;
         cin >> N;
-
-        int count = 0;
-
-        for(int i=2; i<=N/2; i++) {
-            if(prime[i] && prime[N-i]) {
-                count++;
-            }
-        }
-        cout << count << '\n';
+        partition(N);
     }
-
-    
 
     return 0;
 }
