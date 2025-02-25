@@ -1,27 +1,27 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <map>
+#include <bits/stdc++.h>
 using namespace std;
 
-int main(void) {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    
-    int N,M;
+// 25.02.25 비밀번호 찾기 복습 (해시)
+int N,M;
+
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
     cin >> N >> M;
-    
-    map<string,string> mp; // key-value 컨테이너 map 사용
-    for(int i=0; i<N; i++) {
-        string address, password;
-        cin >> address >> password;
-        mp[address] = password;
+    unordered_map<string,string> site;
+
+    while(N--) {
+        string adrss,pswd;
+        cin >> adrss >> pswd;
+        site[adrss] = pswd;
     }
 
-    for(int i=0; i<M; i++) {
-        string find;
-        cin >> find;
-        cout << mp[find] << '\n';
+    while(M--) {
+        string pb;
+        cin >> pb;
+        cout << site[pb] << "\n";
     }
+    
     return 0;
 }
