@@ -1,34 +1,29 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <queue>
+#include <bits/stdc++.h>
 using namespace std;
 
+// 25.03.02 최소힙 복습 (우선순위 큐)
+int N;
+priority_queue<int,vector<int>,greater<int>> pq;
 
-int main(void) {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-    int N;
     cin >> N;
-    priority_queue<int,vector<int>,greater<int>> que;
-
-    for(int i=0; i<N; i++) {
+    while(N--) {
         int x;
         cin >> x;
-        
         if(x>0) {
-            que.push(x);
+            pq.push(x);
         }
         else if(x==0) {
-            if(que.empty()) cout << 0 << '\n';
+            if(pq.empty()) cout << 0 << "\n";
             else {
-                cout << que.top() << '\n';
-                que.pop();
-            }  
+                cout << pq.top() << "\n";
+                pq.pop();
+            }
         }
     }
-
-   
+    
     return 0;
 }
