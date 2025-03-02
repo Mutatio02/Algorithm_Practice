@@ -1,31 +1,26 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <queue>
+#include <bits/stdc++.h>
 using namespace std;
 
+// 25.03.02 최대 힙 복습 (우선순위 큐)
+int N;
+priority_queue<int> pq;
 
-int main(void) {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-    int N;
     cin >> N;
-    priority_queue<int> que;
     while(N--) {
         int x;
         cin >> x;
-
-        if(x>0) { // 자연수는 삽입
-            que.push(x);
+        if(x>0) {
+            pq.push(x);
         }
-        else if(x==0) { // 0이면
-            if(que.empty()) { // 비어있으면 0을 출력
-                cout << 0 << '\n';
-            }
+        else if(x==0) {
+            if(pq.empty()) cout << 0 << "\n";
             else {
-                cout << que.top() << '\n'; // 우선순위 큐에 의해 가장 큰 값을 출력
-                que.pop(); // 제거
+                cout << pq.top() << "\n";
+                pq.pop();
             }
         }
     }
