@@ -1,54 +1,44 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <queue>
+#include <bits/stdc++.h>
 using namespace std;
 
-int board[1001][1001];
-bool visit[1001];
+// 25.03.04 연결요소의 개수 복습 (그래프)-- 인접행렬 방식 + dfs
+int N,M;
+int arr[1005][1005];
+bool vis[1005];
 
-int main(void) {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    for(int i=0; i<1001; i++) {
-        for(int j=0; j<1001; j++) {
-            board[i][j] = 0;
+void dfs(int cur) {
+    vis[cur] = true;
+    
+    for(int i=1; i<=N; i++) {
+        if(arr[cur][i] == 1 && !vis[i]) {
+            dfs(i);
         }
-        visit[i] = false;
     }
+}
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-    int N,M; // 정점 간선
+
     cin >> N >> M;
 
-    for(int i=0; i<M; i++) {
+    while(M--) {
         int u,v;
         cin >> u >> v;
-        board[u][v] = 1;
-        board[v][u] = 1;
+        arr[u][v] = 1;
+        arr[v][u] = 1;
     }
-    int cnt = 0;
+   
+    int cnt = 0;    
 
     for(int i=1; i<=N; i++) {
-        if(visit[i] == false) {
-            queue<int> que;
-            que.push(i);
-            visit[i] = true;
-
-            while(!que.empty()) {
-                int cur = que.front();
-                que.pop();
-
-                for(int j=1; j<=N; j++) {
-                    if(board[cur][j] == 1 && visit[j] == false) {
-                        que.push(j);
-                        visit[j] = true;
-                    }
-                }
-            }
+        if(!vis[i]) {
+            dfs(i);
             cnt++;
         }
     }
+
     cout << cnt;
-    
+
     return 0;
 }
