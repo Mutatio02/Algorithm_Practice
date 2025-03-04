@@ -1,20 +1,11 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// 25.03.04 연결요소의 개수 복습 (그래프)-- 인접행렬 방식 + dfs
+// 25.03.04 연결요소의 개수 복습 (그래프)-- 인접리스트 + bfs
 int N,M;
-int arr[1005][1005];
+vector<int> arr[1005];
 bool vis[1005];
 
-void dfs(int cur) {
-    vis[cur] = true;
-    
-    for(int i=1; i<=N; i++) {
-        if(arr[cur][i] == 1 && !vis[i]) {
-            dfs(i);
-        }
-    }
-}
 int main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
@@ -25,18 +16,31 @@ int main() {
     while(M--) {
         int u,v;
         cin >> u >> v;
-        arr[u][v] = 1;
-        arr[v][u] = 1;
+        arr[u].push_back(v);
+        arr[v].push_back(u);
     }
    
     int cnt = 0;    
-
     for(int i=1; i<=N; i++) {
-        if(!vis[i]) {
-            dfs(i);
-            cnt++;
+        if(vis[i]) continue;
+        cnt++;
+        
+        queue<int> q;
+        q.push(i);
+        vis[i] = true;
+        
+        while(!q.empty()) {
+            int cur = q.front();
+            q.pop();
+
+            for(auto nxt: arr[cur]) {
+                if(vis[nxt]) continue;
+                q.push(nxt);
+                vis[nxt] = true;
+            }
         }
     }
+    
 
     cout << cnt;
 
