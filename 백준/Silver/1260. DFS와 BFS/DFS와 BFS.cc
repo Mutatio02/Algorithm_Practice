@@ -1,74 +1,81 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <queue>
-#include <stack>
+#include <bits/stdc++.h>
 using namespace std;
 
-int board[1001][1001]; // 인접 행렬
-bool visit[1001];      // 방문 여부
+// 25.03.04 DFS와 BFS 복습 (그래프) -- 인접 리스트
+int N,M,V;
+vector<int> arr[1005];
+bool vis[1005];
 
-// 방문 상태 초기화
-void Reset() {
-    for (int i = 0; i < 1001; i++) {
-        visit[i] = false; 
+void reset() {
+    fill(vis,vis+1005,false);
+}
+void dfs(int node) { // 재귀 dfs
+    vis[node] = true;
+    cout << node << ' ';
+    for(auto nxt : arr[node]) {
+        if(vis[nxt]) continue;
+        dfs(nxt);
     }
 }
 
-void DFS(int n, int v) {
-    visit[v] = true;
-    cout << v << ' ';
-    for(int i=1; i<=n; i++) {
-        if(board[v][i] == 1 && !visit[i]) {
-            DFS(n,i);
-        }
-    }
-}
-
-void BFS(int n, int v) {
-    queue<int> que;
-    que.push(v);
-    visit[v] = true;
-    while (!que.empty()) {
-        auto cur = que.front();
-        que.pop();
+void dfs2(int node) { // 비 재귀 dfs
+    stack<int> stk;
+    stk.push(node);
+    while(!stk.empty()) {
+        int cur = stk.top();
+        stk.pop();
+        
+        if(vis[cur]) continue;
+        vis[cur] = true;
         cout << cur << ' ';
 
-        for (int i = 1; i <= n; i++) {
-            if (board[cur][i] == 1 && !visit[i]) {
-                que.push(i);
-                visit[i] = true;
-            }
+        for(int i=0; i<arr[cur].size(); i++) {
+            int nxt = arr[cur][arr[cur].size()-1-i];
+            if(vis[nxt]) continue;
+            stk.push(nxt);
         }
     }
 }
 
-int main(void) {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+void bfs(int node) {
+    queue<int> q;
+    q.push(node);
+    vis[node] = true;
     
-    int N, M, V; // 정점 수, 간선 수, 시작 정점 번호
-    cin >> N >> M >> V;
+    while(!q.empty()) {
+        int cur = q.front();
+        cout << cur << ' ';
+        q.pop();
 
-    for (int i = 0; i < 1001; i++) {
-        for (int j = 0; j < 1001; j++) {
-            board[i][j] = 0; // 초기화
+        for(auto nxt : arr[cur]) {
+            if(vis[nxt]) continue;
+            q.push(nxt);
+            vis[nxt] = true;
         }
     }
+}
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-    for (int i = 0; i < M; i++) {
-        int x, y;
-        cin >> x >> y;
-        board[x][y] = 1; // 양방향 연결
-        board[y][x] = 1; 
+    cin >> N >> M >> V;
+    while(M--) {
+        int u,v;
+        cin >> u >> v;
+        arr[u].push_back(v);
+        arr[v].push_back(u);
+    }
+    
+    for(int i=1; i<=N; i++) {
+        sort(arr[i].begin(),arr[i].end());
     }
 
-    Reset();        
-    DFS(N, V);      
-    cout << '\n';   
-
-    Reset();        
-    BFS(N, V);     
+    reset();
+    //dfs(V);
+    dfs2(V);
+    reset();
+    cout << "\n";
+    bfs(V);
 
     return 0;
 }
