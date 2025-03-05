@@ -1,41 +1,40 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <queue>
+#include <bits/stdc++.h>
 using namespace std;
-int board[101][101]; // 연결된 것 표시
-int visit[101]; // 방문 표시
 
-int main(void) {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+// 25.03.05 바이러스 복습 (그래프) -- 인접 리스트 dfs(재귀)
+int N,M;
+vector<int> arr[105];
+bool vis[105];
+int cnt = 0;
+
+void dfs(int node) {
+    vis[node] = true;
+
+    for(auto nxt : arr[node]) {
+        if(vis[nxt]) continue;
+        cnt++;
+        dfs(nxt);
+    }
+}
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+    cin >> N;
+    cin >> M;
     
-    int T;
-    cin >> T; // 컴퓨터 수
-    int N;
-    cin >> N; // 연결되어 있는 쌍의 수
-    queue<int> que;
-    for(int i=0; i<N; i++) {
-        int x,y;
-        cin >> x >> y; // 서로 연결
-        board[x][y] = 1; 
-        board[y][x] = 1;
+    while(M--) {
+        int u,v;
+        cin >> u >> v;
+        arr[u].push_back(v);
+        arr[v].push_back(u);
     }
-    visit[1] = 1; // 바이러스 방문
-    que.push(1);
-    int cnt =0;
-    while(!que.empty()) {
-        auto cur = que.front();
-        que.pop();
+    
+    for(int i=1; i<=N; i++) {
+        sort(arr[i].begin(),arr[i].end());
+    }
 
-        for(int i=1; i<=T; i++) {
-            if(board[cur][i] == 1 && visit[i] !=1 ) { // 연결되었지만 방문 안한 경우
-                que.push(i);
-                visit[i] = 1; // 방문했다고 표시
-                cnt++;
-            }
-        }
-    }
+    dfs(1);
     cout << cnt;
     return 0;
 }
