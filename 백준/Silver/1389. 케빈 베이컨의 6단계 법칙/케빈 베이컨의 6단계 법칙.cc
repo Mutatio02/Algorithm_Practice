@@ -1,54 +1,55 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <queue>
+#include <bits/stdc++.h>
 using namespace std;
 
-int board[101][101];
-bool visit[101];
+// 25.03.08 케빈 베이컨의 6단계 법칙 복습 (그래프) 
+int N,M; 
+vector<int> adj[105];
+int dist[105]; // 거리 계산
 
-int BFS(int start,int N) {
-    fill(visit,visit+N+1,false);
-    queue<pair<int,int>> que; // 시작 노드 밑 거리
-    que.push({start,0});
-    visit[start] = true;
-    int distance = 0;
-    while(!que.empty()) {
-        int cur = que.front().first;
-        int d = que.front().second;
-        que.pop();
+int bfs(int node) {
+    fill(dist,dist+N+1,-1);
+    queue<int> q;
+    q.push(node);
+    dist[node] = 0;
+    int sum = 0; // 수들의 총합
 
-        distance += d; // 거리 합산
-        for(int i=1; i<=N; i++) {
-            if(board[cur][i] == 1 && visit[i] == false) {
-                que.push({i,d+1});
-                visit[i] = true;
-            }
+    while(!q.empty()) {
+        int cur = q.front();
+        q.pop();
+
+        for(int nxt : adj[cur]) {
+            if(dist[nxt] != -1) continue;
+            dist[nxt] = dist[cur]+1;
+            sum += dist[nxt]; // 총합 누적
+            q.push(nxt);
         }
     }
-    return distance; // start별로 각 케빈 베이컨의 수 결과 리턴
+    
+    return sum;
 }
-int main(void) {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
 
-    int N,M; // 유저 수 친구 관계 수
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
     cin >> N >> M;
-    vector<int> kevin(N+1,0); // 케빈 베이컨의 수 저장
-    for(int i=0; i<M; i++) {
-        int A,B;
-        cin >> A >> B;
-        board[A][B] = 1;
-        board[B][A] = 1;
+    while(M--) {
+        int u,v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
     
+    int min_k = INT_MAX; 
+    int ans;
     for(int i=1; i<=N; i++) {
-        kevin[i] = BFS(i,N); // 전체 BFS 탐색
+        int kevin = bfs(i); // bfs로 케빈 베이컨 수 구하기 
+        if(kevin<min_k) { // 가장 작은 케빈 베이컨 수 찾기
+            min_k = kevin;
+            ans = i; // 가장 번호가 작은 사람
+        }
     }
-    // 1부터 시작하므로 0에서 1만큼 더해줌
-    int result = min_element(kevin.begin()+1,kevin.end()) - kevin.begin();
 
-    cout << result;
-    
+    cout << ans;
     return 0;
 }
