@@ -1,36 +1,32 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <string>
+#include <bits/stdc++.h>
 using namespace std;
 
-int main(void) {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+// 25.03.11 일곱난쟁이 복습 
+int arr[10];
 
-    vector<int> v(9,0);
-    int sum = 0; // 합이 100
-    for(int i=0; i<9; i++) {
-        cin >>  v[i];
-        sum += v[i];
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    
+    int N = 9;
+    int sum = 0;
+    for(int i=0; i<N; i++) {
+        cin >> arr[i];
+        sum += arr[i];
     }
 
-    sort(v.begin(),v.end());
+    sort(arr,arr+N);
 
-    for(int i=0; i<8; i++) {
-        for(int j=i+1; j<9; j++) {
-            if(sum-(v[i]+v[j]) == 100) { // 2개를 제외한게 100이면
-
-                for(int k = 0; k<9; k++) {
-                    if(k != i && k != j) { // 해당 2개를 제외하고 출력
-                        cout << v[k] << '\n';
-                    }
+    for(int i=0; i<N; i++) {
+        for(int j=i+1; j<N; j++) {
+            if(sum-arr[i]-arr[j] ==100) { // 2명을 제외
+                for(int k=0; k<N; k++) {
+                    if(k!=i && k!=j) cout << arr[k] << "\n";
                 }
                 return 0;
             }
         }
     }
-
-
+    
     return 0;
 }
