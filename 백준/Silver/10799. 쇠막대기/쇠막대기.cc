@@ -1,35 +1,35 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <string>
-#include <stack>
+#include <bits/stdc++.h>
 using namespace std;
 
-int main(void) {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+// 25.04.02 쇠막대기 복습(스택)
+string str;
+int cnt = 0;
+stack<char> stk;
 
-    string S;
-    cin >> S;
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-    stack<char> stk;
-    int cnt = 0;
-    for(int i=0; i<S.length(); i++) {
-        if(S[i] == '(') {
-            stk.push(S[i]);
+    cin >> str;
+
+    for(int i=0; i<str.length(); i++) {
+        if(str[i] == '(') {
+            stk.push(str[i]);
         }
-        else { // ')'인 경우
-            if(S[i-1] == '(') { // 즉 '()'인 경우 
-                stk.pop(); // 이전에 들어온 '('를 제거
-                cnt +=stk.size();
+        else {
+            if(str[i-1] == '(') {
+                stk.pop();
+                cnt += stk.size();
             }
             else {
-                cnt+=1;
+                cnt +=1;
                 stk.pop();
             }
         }
-        
     }
     cout << cnt;
+
     return 0;
+
 }
+
