@@ -1,8 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-// 25.2.5 RGB거리 (DP 복습) 
+// 25.05.010 RGB 거리  (다이나믹 프로그래밍 복습)
 int N;
-int dp[1010][3];
+int dp[1005][3]; // red greeen blue
 
 int main() {
     ios::sync_with_stdio(0);
@@ -14,16 +14,15 @@ int main() {
             cin >> dp[i][j];
         }
     }
-
-    for(int i=1; i<=N; i++) {
-        dp[i][0] += min(dp[i-1][1],dp[i-1][2]); // Red -> green, blue
-        dp[i][1] += min(dp[i-1][0],dp[i-1][2]); // Green -> red, blue
-        dp[i][2] += min(dp[i-1][0],dp[i-1][1]); // Blue -> red, green
+    
+    for(int i=0; i<N; i++) {
+        dp[i][0] += min(dp[i-1][1],dp[i-1][2]);
+        dp[i][1] += min(dp[i-1][0],dp[i-1][2]);
+        dp[i][2] += min(dp[i-1][0],dp[i-1][1]);
     }
-
-    int result = min({dp[N-1][0],dp[N-1][1],dp[N-1][2]});
-
-    cout << result;
+    
+    int ans = min(min(dp[N-1][0],dp[N-1][1]),dp[N-1][2]);
+    cout << ans;
 
     return 0;
 }
